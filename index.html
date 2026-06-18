@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Customer Review Sentiment Analysis</h2>
+
+        <textarea
+            id="review"
+            placeholder="Enter your review..."
+        ></textarea>
+
+        <br><br>
+
+        <button onclick="predictSentiment()">
+            Predict Sentiment
+        </button>
+
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        async function predictSentiment() {
+            const review = document.getElementById("review").value;
+
+            if (!review.trim()) {
+                document.getElementById("result").innerText =
+                    "Please enter a review.";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        review: review
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById("result").innerText =
+                    "Prediction: " + data.prediction;
+
+            } catch (error) {
+                document.getElementById("result").innerText =
+                    "Error occurred while predicting.";
+            }
+        }
+    </script>
+
+</body>
+</html>
